@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use HTML::RewriteResources;
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 my $html = << "END";
 <html>
@@ -16,17 +16,25 @@ my $html = << "END";
 </html>
 END
 
-my %seen;
+my %seen_uri;
+my %seen_tag;
 
 my $rewrote = HTML::RewriteResources->rewrite($html, sub {
     my $uri = shift;
-    $seen{$uri}++;
+    my $tag = shift;
+
+    $seen_uri{$uri}++;
+    $seen_tag{$tag}++;
+
     return uc $uri;
 });
 
-is(keys %seen, 2, "saw two resources");
-is($seen{"moose.jpg"}, 1, "saw moose.jpg once");
-is($seen{"http://example.com/nethack.png"}, 1, "saw http://example.com/nethack.png once");
+is(keys %seen_uri, 2, "saw two resources");
+is($seen_uri{"moose.jpg"}, 1, "saw moose.jpg once");
+is($seen_uri{"http://example.com/nethack.png"}, 1, "saw http://example.com/nethack.png once");
+
+is(keys %seen_tag, 1, "saw two tag");
+is($seen_tag{"img"}, 2, "saw img twice");
 
 is($rewrote, << "END", "rewrote the html correctly");
 <html>

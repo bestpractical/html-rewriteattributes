@@ -56,15 +56,15 @@ sub _should_rewrite { 1 }
 sub _start_tag {
     my ($self, $tag, $attrs, $attrseq, $text) = @_;
 
-    for my $attr (@$attrseq) {
-        next unless $self->_should_rewrite($tag, $attr);
-        $attrs->{$attr} = $self->{rewrite_callback}->($attrs->{$attr});
-    }
-
     $self->{rewrite_html} .= "<$tag";
 
     for my $attr (@$attrseq) {
         next if $attr eq '/';
+
+        if ($self->_should_rewrite($tag, $attr)) {
+            $attrs->{$attr} = $self->{rewrite_callback}->($attrs->{$attr}, $tag);
+        }
+
         $self->{rewrite_html} .= sprintf ' %s="%s"',
                                     $attr,
                                     #_escape($attrs->{$attr}),
