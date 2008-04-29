@@ -121,6 +121,12 @@ HTML::RewriteAttributes - concise attribute rewriting
     use HTML::RewriteAttributes::Links;
     $html = HTML::RewriteAttributes::Links->rewrite($html, "http://search.cpan.org");
 
+    HTML::RewriteAttributes::Links->rewrite($html, sub {
+        my ($tag, $attr, $value) = @_;
+        push @links, $value;
+        $value;
+    });
+
 =cut
 
 1;

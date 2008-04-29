@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 # RewriteAttributes {{{
 my $html = << "END";
@@ -86,6 +86,22 @@ $html = << "END";
 END
 
 use HTML::RewriteAttributes::Links;
+my @links;
+HTML::RewriteAttributes::Links->rewrite($html, sub {
+    my ($tag, $attr, $value) = @_;
+    push @links, $value;
+    $value
+});
+
+is_deeply(\@links, [
+    "baroque.jpg",
+    "http://en.wikipedia.org/wiki/COBOL",
+    "http://en.wikipedia.org/wiki/FORTRAN",
+    "http://example.com/img/COBOL.bmp",
+    "http://example.com/img/FORTRAN.bmp",
+]);
+
+
 $html = HTML::RewriteAttributes::Links->rewrite($html, "http://search.cpan.org");
 
 is($html, << "END", "rewrote the html correctly");
