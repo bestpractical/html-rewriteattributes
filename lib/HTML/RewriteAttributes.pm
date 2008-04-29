@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package HTML::RewriteResources;
+package HTML::RewriteAttributes;
 use strict;
 use warnings;
 use base 'HTML::Parser';
@@ -51,35 +51,17 @@ sub _begin_rewriting {
 
 sub _done_rewriting { }
 
-my %rewritable_attrs = (
-    bgsound => [ qw/src       / ],
-    body    => [ qw/background/ ],
-    img     => [ qw/src       / ],
-    input   => [ qw/src       / ],
-    table   => [ qw/background/ ],
-    td      => [ qw/background/ ],
-    th      => [ qw/background/ ],
-    tr      => [ qw/background/ ],
-);
-
-sub _rewritable_attrs {
-    my $self = shift;
-    my $tag  = shift;
-
-    return @{ $rewritable_attrs{$tag} || [] }
-}
+sub _should_rewrite { 1 }
 
 sub _start_tag {
-    my ($self, $tagname, $attrs, $attrseq, $text) = @_;
+    my ($self, $tag, $attrs, $attrseq, $text) = @_;
 
-    my @rewritable = $self->_rewritable_attrs($tagname);
-
-    for my $attr (@rewritable) {
-        next unless exists $attrs->{$attr};
+    for my $attr (@$attrseq) {
+        next unless $self->_should_rewrite($tag, $attr);
         $attrs->{$attr} = $self->{rewrite_callback}->($attrs->{$attr});
     }
 
-    $self->{rewrite_html} .= "<$tagname";
+    $self->{rewrite_html} .= "<$tag";
 
     for my $attr (@$attrseq) {
         next if $attr eq '/';
@@ -94,7 +76,7 @@ sub _start_tag {
 }
 
 sub _default {
-    my ($self, $tagname, $attrs, $text) = @_;
+    my ($self, $tag, $attrs, $text) = @_;
     $self->{rewrite_html} .= $text;
 }
 
