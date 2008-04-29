@@ -68,6 +68,7 @@ sub _start_tag {
 
         if ($self->_should_rewrite($tag, $attr)) {
             $attrs->{$attr} = $self->_invoke_callback($tag, $attr, $attrs->{$attr});
+            next if !defined($attrs->{$attr});
         }
 
         $self->{rewrite_html} .= sprintf ' %s="%s"',
