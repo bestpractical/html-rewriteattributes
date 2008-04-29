@@ -1,8 +1,8 @@
 use inc::Module::Install;
 
 # Define metadata
-name            'HTML-RewriteResources';
-all_from        'lib/HTML/RewriteResources.pm';
+name            'HTML-RewriteAttributes';
+all_from        'lib/HTML/RewriteAttributes.pm';
 
 requires 'HTML::Parser';
 requires 'HTML::Entities';

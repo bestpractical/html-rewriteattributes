@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package HTML::RewriteResources;
+package HTML::RewriteAttributes::Resources;
 use strict;
 use warnings;
 use base 'HTML::RewriteAttributes';

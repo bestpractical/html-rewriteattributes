@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use HTML::RewriteResources;
+use HTML::RewriteAttributes::Resources;
 use Test::More tests => 6;
 
 my $html = << "END";
@@ -19,7 +19,7 @@ END
 my %seen_uri;
 my %seen_tag;
 
-my $rewrote = HTML::RewriteResources->rewrite($html, sub {
+my $rewrote = HTML::RewriteAttributes::Resources->rewrite($html, sub {
     my $uri = shift;
     my $tag = shift;
 
