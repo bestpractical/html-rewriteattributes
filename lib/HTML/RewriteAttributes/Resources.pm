@@ -54,6 +54,9 @@ sub _start_tag {
                 return;
             }
         }
+        if ($tag eq 'style' && $attr->{type} eq 'text/css') {
+            $self->{rewrite_look_for_style} = 1;
+        }
     }
 
     $self->SUPER::_start_tag(@_);
@@ -61,8 +64,7 @@ sub _start_tag {
 
 sub _default {
     my ($self, $tag, $attrs, $text) = @_;
-
-    if ($tag && $tag eq 'script' && $attrs->{type} eq 'text/css') {
+    if (delete $self->{rewrite_look_for_style}) {
         $text = $self->_handle_imports($text);
     }
 
