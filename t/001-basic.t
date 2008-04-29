@@ -9,6 +9,9 @@ my $html = << "END";
     <body>
         <img src="moose.jpg" />
         <img src="http://example.com/nethack.png">
+        <p align="justified">
+            hooray
+        </p>
     </body>
 </html>
 END
@@ -30,6 +33,9 @@ is($rewrote, << "END", "rewrote the html correctly");
     <body>
         <img src="MOOSE.JPG" />
         <img src="HTTP://EXAMPLE.COM/NETHACK.PNG">
+        <p align="justified">
+            hooray
+        </p>
     </body>
 </html>
 END

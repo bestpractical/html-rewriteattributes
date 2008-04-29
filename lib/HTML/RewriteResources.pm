@@ -51,13 +51,50 @@ sub _begin_rewriting {
 
 sub _done_rewriting { }
 
+my %rewritable_attrs = (
+    bgsound => [ qw/src       / ],
+    body    => [ qw/background/ ],
+    img     => [ qw/src       / ],
+    input   => [ qw/src       / ],
+    table   => [ qw/background/ ],
+    td      => [ qw/background/ ],
+    th      => [ qw/background/ ],
+    tr      => [ qw/background/ ],
+);
+
+sub _rewritable_attrs {
+    my $self = shift;
+    my $tag  = shift;
+
+    return @{ $rewritable_attrs{$tag} || [] }
+}
+
 sub _start_tag {
-    my ($self, $tagname, $attr, $attrseq, $text) = @_;
-    $self->{rewrite_html} .= $text;
+    my ($self, $tagname, $attrs, $attrseq, $text) = @_;
+
+    my @rewritable = $self->_rewritable_attrs($tagname);
+
+    for my $attr (@rewritable) {
+        next unless exists $attrs->{$attr};
+        $attrs->{$attr} = $self->{rewrite_callback}->($attrs->{$attr});
+    }
+
+    $self->{rewrite_html} .= "<$tagname";
+
+    for my $attr (@$attrseq) {
+        next if $attr eq '/';
+        $self->{rewrite_html} .= sprintf ' %s="%s"',
+                                    $attr,
+                                    #_escape($attrs->{$attr}),
+                                    $attrs->{$attr};
+    }
+
+    $self->{rewrite_html} .= ' /' if $attrs->{'/'};
+    $self->{rewrite_html} .= '>';
 }
 
 sub _default {
-    my ($self, $tagname, $attr, $text) = @_;
+    my ($self, $tagname, $attrs, $text) = @_;
     $self->{rewrite_html} .= $text;
 }
 
