@@ -9,6 +9,7 @@ my $html = << "END";
     <body>
         <img src="moose.jpg" />
         <img src="http://example.com/nethack.png">
+        <a href="Example.html">Example</a>
         <p align="justified" style="color: red">
             hooray
         </p>
@@ -29,6 +30,7 @@ my $rewrote = HTML::RewriteAttributes::Links->rewrite($html, sub {
 is_deeply(\@seen, [
     [img => src => "moose.jpg"],
     [img => src => "http://example.com/nethack.png"],
+    [a => href => "Example.html"],
 ]);
 
 is($rewrote, << "END", "rewrote the html correctly");
@@ -36,6 +38,7 @@ is($rewrote, << "END", "rewrote the html correctly");
     <body>
         <img src="MOOSE.JPG" />
         <img src="HTTP://EXAMPLE.COM/NETHACK.PNG">
+        <a href="EXAMPLE.HTML">Example</a>
         <p align="justified" style="color: red">
             hooray
         </p>
