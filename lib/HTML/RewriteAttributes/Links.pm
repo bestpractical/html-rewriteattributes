@@ -21,21 +21,23 @@ sub _should_rewrite {
 }
 
 sub _rewrite {
-    my ($self, $html, $base) = @_;
+    my ($self, $html, $arg) = @_;
 
-    $self->{rewrite_link_base} = $base;
+    if (!ref($arg)) {
+        $self->{rewrite_link_base} = $arg;
 
-    my $cb = sub {
-        my ($tag, $attr, $value) = @_;
-        my $uri = URI->new($value);
+        $arg = sub {
+            my ($tag, $attr, $value) = @_;
+            my $uri = URI->new($value);
 
-        $uri = $uri->abs($self->{rewrite_link_base})
-            unless defined $uri->scheme;
+            $uri = $uri->abs($self->{rewrite_link_base})
+                unless defined $uri->scheme;
 
-        return $uri->as_string;
-    };
+            return $uri->as_string;
+        };
+    }
 
-    $self->SUPER::_rewrite($html, $cb);
+    $self->SUPER::_rewrite($html, $arg);
 }
 
 # if we see a base tag, steal its href for future link resolution
