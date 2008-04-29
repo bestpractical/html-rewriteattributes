@@ -63,7 +63,7 @@ sub _start_tag {
         next if $attr eq '/';
 
         if ($self->_should_rewrite($tag, $attr)) {
-            $attrs->{$attr} = $self->{rewrite_callback}->($attrs->{$attr}, tag => $tag, attr => $attr, rewriter => $self);
+            $attrs->{$attr} = $self->_invoke_callback($tag, $attr, $attrs->{$attr});
         }
 
         $self->{rewrite_html} .= sprintf ' %s="%s"',
@@ -78,6 +78,13 @@ sub _start_tag {
 sub _default {
     my ($self, $tag, $attrs, $text) = @_;
     $self->{rewrite_html} .= $text;
+}
+
+sub _invoke_callback {
+    my $self = shift;
+    my ($tag, $attr, $value) = @_;
+
+    return $self->{rewrite_callback}->($tag, $attr, $value);
 }
 
 1;

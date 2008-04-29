@@ -23,5 +23,12 @@ sub _should_rewrite {
     return ( $rewritable_attrs{$tag} || {} )->{$attr};
 }
 
+sub _invoke_callback {
+    my $self = shift;
+    my ($tag, $attr, $value) = @_;
+
+    return $self->{rewrite_callback}->($value, tag => $tag, attr => $attr, rewriter => $self);
+}
+
 1;
 
