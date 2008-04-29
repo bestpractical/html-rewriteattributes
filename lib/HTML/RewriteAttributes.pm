@@ -92,5 +92,36 @@ sub _invoke_callback {
     return $self->{rewrite_callback}->($tag, $attr, $value);
 }
 
+=head1 NAME
+
+HTML::RewriteAttributes - concise attribute rewriting
+
+=head1 SYNOPSIS
+
+    use HTML::RewriteAttributes;
+    $html = HTML::RewriteAttributes->rewrite($html, sub {
+        my ($tag, $attr, $value) = @_;
+
+        # delete any attribute that mentions..
+        return if $value =~ /COBOL/i;
+
+        $value =~ s/\brocks\b/rules/g;
+        return $value;
+    });
+
+    use HTML::RewriteAttributes::Resources;
+    $html = HTML::RewriteAttributes::Resources->rewrite($html, sub {
+        my $uri = shift;
+        my $content = fetch_from_mason($uri);
+        my $cid = generate_cid_from($content);
+        $mime->attach($cid => content);
+        return "cid:$cid";
+    });
+
+    use HTML::RewriteAttributes::Links;
+    $html = HTML::RewriteAttributes::Links->rewrite($html, "http://search.cpan.org");
+
+=cut
+
 1;
 
