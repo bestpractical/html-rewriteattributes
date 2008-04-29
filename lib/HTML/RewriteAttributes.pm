@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base 'HTML::Parser';
 use Carp 'croak';
+use HTML::Entities 'encode_entities';
 
 our $VERSION = '0.01';
 
@@ -67,8 +68,7 @@ sub _start_tag {
 
         $self->{rewrite_html} .= sprintf ' %s="%s"',
                                     $attr,
-                                    #_escape($attrs->{$attr}),
-                                    $attrs->{$attr};
+                                    encode_entities($attrs->{$attr});
     }
 
     $self->{rewrite_html} .= ' /' if $attrs->{'/'};

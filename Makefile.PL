@@ -5,6 +5,7 @@ name            'HTML-RewriteResources';
 all_from        'lib/HTML/RewriteResources.pm';
 
 requires 'HTML::Parser';
+requires 'HTML::Entities';
 
 WriteAll;
 
