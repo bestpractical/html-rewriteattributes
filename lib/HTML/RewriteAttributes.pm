@@ -98,7 +98,6 @@ HTML::RewriteAttributes - concise attribute rewriting
 
 =head1 SYNOPSIS
 
-    use HTML::RewriteAttributes;
     $html = HTML::RewriteAttributes->rewrite($html, sub {
         my ($tag, $attr, $value) = @_;
 
@@ -109,23 +108,80 @@ HTML::RewriteAttributes - concise attribute rewriting
         return $value;
     });
 
-    use HTML::RewriteAttributes::Resources;
+
+    # writing some HTML email I see..
     $html = HTML::RewriteAttributes::Resources->rewrite($html, sub {
         my $uri = shift;
-        my $content = fetch_from_mason($uri);
+        my $content = render_template($uri);
         my $cid = generate_cid_from($content);
         $mime->attach($cid => content);
         return "cid:$cid";
     });
 
-    use HTML::RewriteAttributes::Links;
+
+    # up for some HTML::ResolveLink?
     $html = HTML::RewriteAttributes::Links->rewrite($html, "http://search.cpan.org");
 
+    # or perhaps HTML::LinkExtor?
     HTML::RewriteAttributes::Links->rewrite($html, sub {
         my ($tag, $attr, $value) = @_;
         push @links, $value;
         $value;
     });
+
+=head1 DESCRIPTION
+
+C<HTML::RewriteAttributes> is designed for simple yet powerful HTML attribute
+rewriting.
+
+You simply specify a callback to run for each attribute and we do the rest
+for you.
+
+This module is designed to be subclassable to make handling special cases
+eaiser. See the source for methods you can override.
+
+=head1 METHODS
+
+=head2 C<new>
+
+You don't need to call C<new> explicitly - it's done in L</rewrite>. It takes
+no arguments.
+
+=head2 C<rewrite> HTML, callback -> HTML
+
+This is the main interface of the module. You pass in some HTML and a callback,
+the callback is invoked potentially many times, and you get back some similar
+HTML.
+
+The callback receives as arguments the tag name, the attribute name, and the
+attribute value (though subclasses may override this --
+L<HTML::RewriteAttributes::Resources> does). Return C<undef> to remove the
+attribute, or any other value to set the value of the attribute.
+
+=head1 SEE ALSO
+
+L<HTML::Parser>, L<HTML::ResolveLink>, L<Email::MIME::CreateHTML>,
+L<HTML::LinkExtor>
+
+=head1 THANKS
+
+Some code was inspired by, and tests borrowed from, Miyagawa's
+L<HTML::ResolveLink>.
+
+=head1 AUTHOR
+
+Shawn M Moore, C<< <sartak@bestpractical.com> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to
+C<bug-html-rewriteattributes at rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=HTML-RewriteAttributes>.
+
+=head1 LICENSE
+
+Copyright 2008 Best Practical Solutions, LLC.
+HTML::RewriteAttributes is distributed under the same terms as Perl itself.
 
 =cut
 
