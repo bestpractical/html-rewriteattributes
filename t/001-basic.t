@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use HTML::RewriteAttributes::Resources;
+use HTML::RewriteAttributes;
 use Test::More tests => 2;
 
 my $html = << "END";

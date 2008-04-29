@@ -19,7 +19,11 @@ sub new {
 sub rewrite {
     my $self = shift;
     $self = $self->new if !ref($self);
+    $self->_rewrite(@_);
+}
 
+sub _rewrite {
+    my $self = shift;
     my $html = shift;
     my $cb   = shift || sub { $self->rewrite_resource(@_) };
 
