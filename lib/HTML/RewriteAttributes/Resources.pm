@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use base 'HTML::RewriteAttributes';
 
+our $VERSION = '0.01';
+
 my %rewritable_attrs = (
     bgsound => { src        => 1 },
     body    => { background => 1 },
@@ -92,4 +94,96 @@ sub _import {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+HTML::RewriteAttributes::Resources - concise resource-link rewriting
+
+=head1 SYNOPSIS
+
+    # writing some HTML email I see..
+    $html = HTML::RewriteAttributes::Resources->rewrite($html, sub {
+        my $uri = shift;
+        my $content = render_template($uri);
+        my $cid = generate_cid_from($content);
+        $mime->attach($cid => content);
+        return "cid:$cid";
+    });
+
+    # need to inline CSS too?
+    $html = HTML::RewriteAttributes::Resources->rewrite($html, sub {
+        # see above
+    },
+    inline_css => sub {
+        my $uri = shift;
+        return render_template($uri);
+    });
+
+    # need to inline CSS and follow @imports?
+    $html = HTML::RewriteAttributes::Resources->rewrite($html, sub {
+        # see above
+    },
+    inline_css => sub {
+        # see above
+    }, inline_imports => 1);
+
+=head1 DESCRIPTION
+
+C<HTML::RewriteAttributes::Resources> is a special case of
+L<HTML::RewriteAttributes> for rewriting links to resources. This is to
+facilitate generating, for example, HTML email in an extensible way.
+
+We don't care about how to fetch resources and attach them to the MIME object;
+that's your job. But you don't have to care about how to rewrite the HTML.
+
+=head1 METHODS
+
+=head2 C<new>
+
+You don't need to call C<new> explicitly - it's done in L</rewrite>. It takes
+no arguments.
+
+=head2 C<rewrite> HTML, callback[, args] -> HTML
+
+See the documentation of L<HTML::RewriteAttributes>.
+
+The callback receives as arguments the resource URI (the attribute value), then, in a hash, C<tag> and C<attr>.
+
+=head3 Inlining CSS
+
+C<rewrite> can automatically inline CSS for you.
+
+Passing C<inline_css> will invoke that callback to inline C<style> tags. The
+callback receives as its argument the URI to a CSS file, and expects as a
+return value the contents of that file, so that it may be inlined. Returning
+C<undef> prevents any sort of inlining.
+
+Passing C<inline_imports> (a boolean) will look at any inline CSS and call
+the C<inline_css> callback to inline that import.
+
+This keeps track of what CSS has already been inlined, and won't inline a
+particular CSS file more than once (to prevent import loops).
+
+=head1 SEE ALSO
+
+L<HTML::RewriteAttributes>, L<HTML::Parser>, L<Email::MIME::CreateHTML>
+
+=head1 AUTHOR
+
+Shawn M Moore, C<< <sartak@bestpractical.com> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to
+C<bug-html-rewriteattributes at rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=HTML-RewriteAttributes>.
+
+=head1 LICENSE
+
+Copyright 2008 Best Practical Solutions, LLC.
+HTML::RewriteAttributes::Resources is distributed under the same terms as Perl itself.
+
+=cut
 

@@ -92,6 +92,10 @@ sub _invoke_callback {
     return $self->{rewrite_callback}->($tag, $attr, $value);
 }
 
+1;
+
+__END__
+
 =head1 NAME
 
 HTML::RewriteAttributes - concise attribute rewriting
@@ -184,6 +188,4 @@ Copyright 2008 Best Practical Solutions, LLC.
 HTML::RewriteAttributes is distributed under the same terms as Perl itself.
 
 =cut
-
-1;
 
