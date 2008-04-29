@@ -41,9 +41,9 @@ sub _rewrite {
 # if we see a base tag, steal its href for future link resolution
 sub _start_tag {
     my $self = shift;
-    my ($tagname, $attr, $attrseq, $text) = @_;
+    my ($tag, $attr, $attrseq, $text) = @_;
 
-    if ($tagname eq 'base' && defined $attr->{href}) {
+    if ($tag eq 'base' && defined $attr->{href}) {
         $self->{rewrite_link_base} = $attr->{href};
     }
 

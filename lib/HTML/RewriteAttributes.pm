@@ -11,8 +11,8 @@ our $VERSION = '0.01';
 sub new {
     my $class = shift;
     return $class->SUPER::new(
-        start_h   => [ \&_start_tag, "self,tagname,attr,attrseq,text" ],
-        default_h => [ \&_default,   "self,tagname,attr,text"         ],
+        start_h   => [ '_start_tag', "self,tagname,attr,attrseq,text" ],
+        default_h => [ '_default',   "self,tagname,attr,text"         ],
     );
 }
 
