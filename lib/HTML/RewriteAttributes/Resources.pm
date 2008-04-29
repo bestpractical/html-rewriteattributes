@@ -73,7 +73,20 @@ sub _handle_imports {
     my $self    = shift;
     my $content = shift;
     return $content if !$self->{rewrite_inline_imports};
+
+    # repeat until we get no substitutions
+    1 while $content =~ s{\@import\s*"([^"]+)"\s*;}{ $self->_import($1) }eg;
+
     return $content;
+}
+
+sub _import {
+    my $self = shift;
+    my $uri  = shift;
+
+    return '' if $self->{rewrite_inline_imports_seen}{$uri}++;
+
+    return $self->{rewrite_inline_css_cb}->($uri);
 }
 
 1;
