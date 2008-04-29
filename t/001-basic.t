@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use HTML::RewriteAttributes::Resources;
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 my $html = << "END";
 <html>
@@ -16,25 +16,28 @@ my $html = << "END";
 </html>
 END
 
-my %seen_uri;
-my %seen_tag;
+my %seen;
 
 my $rewrote = HTML::RewriteAttributes::Resources->rewrite($html, sub {
-    my $uri = shift;
-    my $tag = shift;
+    my $uri  = shift;
+    my %args = @_;
 
-    $seen_uri{$uri}++;
-    $seen_tag{$tag}++;
+    $seen{uri}{$uri}++;
+    $seen{tag}{$args{tag}}++;
+    $seen{attr}{$args{attr}}++;
 
     return uc $uri;
 });
 
-is(keys %seen_uri, 2, "saw two resources");
-is($seen_uri{"moose.jpg"}, 1, "saw moose.jpg once");
-is($seen_uri{"http://example.com/nethack.png"}, 1, "saw http://example.com/nethack.png once");
+is(keys %{ $seen{uri} }, 2, "saw two resources");
+is($seen{uri}{"moose.jpg"}, 1, "saw moose.jpg once");
+is($seen{uri}{"http://example.com/nethack.png"}, 1, "saw http://example.com/nethack.png once");
 
-is(keys %seen_tag, 1, "saw two tag");
-is($seen_tag{"img"}, 2, "saw img twice");
+is(keys %{ $seen{tag} }, 1, "saw one tag");
+is($seen{tag}{img}, 2, "saw img twice");
+
+is(keys %{ $seen{attr} }, 1, "saw one attr");
+is($seen{attr}{src}, 2, "saw src twice");
 
 is($rewrote, << "END", "rewrote the html correctly");
 <html>

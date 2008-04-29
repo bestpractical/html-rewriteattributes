@@ -63,7 +63,7 @@ sub _start_tag {
         next if $attr eq '/';
 
         if ($self->_should_rewrite($tag, $attr)) {
-            $attrs->{$attr} = $self->{rewrite_callback}->($attrs->{$attr}, $tag);
+            $attrs->{$attr} = $self->{rewrite_callback}->($attrs->{$attr}, tag => $tag, attr => $attr, rewriter => $self);
         }
 
         $self->{rewrite_html} .= sprintf ' %s="%s"',
