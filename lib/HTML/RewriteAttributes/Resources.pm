@@ -16,9 +16,7 @@ my %rewritable_attrs = (
 );
 
 sub _should_rewrite {
-    my $self = shift;
-    my $tag  = shift;
-    my $attr = shift;
+    my ($self, $tag, $attr) = @_;
 
     return ( $rewritable_attrs{$tag} || {} )->{$attr};
 }

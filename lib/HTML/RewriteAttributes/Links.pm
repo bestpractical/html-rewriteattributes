@@ -26,7 +26,8 @@ sub _rewrite {
     $self->{rewrite_link_base} = $base;
 
     my $cb = sub {
-        my $uri = URI->new(shift);
+        my ($tag, $attr, $value) = @_;
+        my $uri = URI->new($value);
 
         $uri = $uri->abs($self->{rewrite_link_base})
             unless defined $uri->scheme;
