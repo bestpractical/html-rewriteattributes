@@ -47,7 +47,7 @@ sub _start_tag {
 
     if ($self->{rewrite_inline_css_cb}) {
         if ($tag eq 'link' && $attr->{type} eq 'text/css') {
-            my $content = $self->{rewrite_inline_css_cb}->($attr->{href});
+            my $content = $self->_import($attr->{href});
             if (defined $content) {
                 $content = $self->_handle_imports($content);
                 $self->{rewrite_html} .= "\n<style type=\"text/css\">\n<!--\n$content\n-->\n</style>\n";

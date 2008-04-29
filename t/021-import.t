@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use HTML::RewriteAttributes::Resources;
-use Test::More tests => 4;
+use Test::More tests => 3;
 
 my $html = << 'END';
 <html>
@@ -38,6 +38,13 @@ my $rewrote = HTML::RewriteAttributes::Resources->rewrite($html, sub {
     return $css{$uri};
 }, inline_imports => 1);
 
+is(@seen, 0, "no ordinary resources seen");
+is_deeply(\@seen_css, [
+    "foo.css",
+    "quux.css",
+    "bar.css",
+    "baz.css",
+]);
 
 $rewrote =~ s/ +$//mg;
 $rewrote =~ s/^ +//mg;
@@ -58,7 +65,7 @@ foo; quux; bar;
 
 <style type="text/css">
 <!--
-baz; foo;
+baz;
 -->
 </style>
 
