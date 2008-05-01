@@ -7,11 +7,11 @@ use Test::More tests => 3;
 my $html = << 'END';
 <html>
     <head>
-        <link type="text/css" href="foo.css" />
+        <link type="text/css" href="/foo.css" />
         <style type="text/css">
 @import "bar.css";
         </style>
-        <link type="text/css" href="baz.css" />
+        <link type="text/css" href="/baz.css" />
     </head>
     <body>
     </body>
@@ -19,10 +19,10 @@ my $html = << 'END';
 END
 
 my %css = (
-    "foo.css"  => 'foo; @import "quux.css";',
-    "bar.css"  => 'bar; @import "quux.css";',
-    "baz.css"  => 'baz; @import "foo.css";',
-    "quux.css" => 'quux; @import "bar.css"; @import "quux.css";',
+    "/foo.css"  => 'foo; @import "quux.css";',
+    "/bar.css"  => 'bar; @import "quux.css";',
+    "/baz.css"  => 'baz; @import "foo.css";',
+    "/quux.css" => 'quux; @import "bar.css"; @import "quux.css";',
 );
 
 my @seen;
@@ -40,10 +40,10 @@ my $rewrote = HTML::RewriteAttributes::Resources->rewrite($html, sub {
 
 is(@seen, 0, "no ordinary resources seen");
 is_deeply(\@seen_css, [
-    "foo.css",
-    "quux.css",
-    "bar.css",
-    "baz.css",
+    "/foo.css",
+    "/quux.css",
+    "/bar.css",
+    "/baz.css",
 ]);
 
 $rewrote =~ s/ +$//mg;

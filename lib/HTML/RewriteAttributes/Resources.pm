@@ -3,6 +3,7 @@ package HTML::RewriteAttributes::Resources;
 use strict;
 use warnings;
 use base 'HTML::RewriteAttributes';
+use URI;
 
 our $VERSION = '0.01';
 
@@ -51,7 +52,7 @@ sub _start_tag {
         if ($tag eq 'link' && $attr->{type} eq 'text/css') {
             my $content = $self->_import($attr->{href});
             if (defined $content) {
-                $content = $self->_handle_imports($content);
+                $content = $self->_handle_imports($content, $attr->{href});
                 $self->{rewrite_html} .= "\n<style type=\"text/css\">\n<!--\n$content\n-->\n</style>\n";
                 return;
             }
@@ -67,7 +68,7 @@ sub _start_tag {
 sub _default {
     my ($self, $tag, $attrs, $text) = @_;
     if (delete $self->{rewrite_look_for_style}) {
-        $text = $self->_handle_imports($text);
+        $text = $self->_handle_imports($text, '.');
     }
 
     $self->SUPER::_default($tag, $attrs, $text);
@@ -76,21 +77,40 @@ sub _default {
 sub _handle_imports {
     my $self    = shift;
     my $content = shift;
+    my $base    = shift;
+
     return $content if !$self->{rewrite_inline_imports};
 
-    # repeat until we get no substitutions
-    1 while $content =~ s{\@import\s*"([^"]+)"\s*;}{ $self->_import($1) }eg;
+    $content =~ s{
+        \@import \s* " ([^"]+) " \s* ;
+    }{
+        $self->_import($self->_absolutify($1, $base))
+    }xeg;
 
     return $content;
 }
 
+sub _absolutify {
+    my $self = shift;
+    my $path = shift;
+    my $base = shift;
+
+    my $uri = URI->new($path);
+    unless (defined $uri->scheme) {
+        $uri = $uri->abs($base);
+    }
+
+    return $uri->as_string;
+}
+
 sub _import {
     my $self = shift;
-    my $uri  = shift;
+    my $path = shift;
 
-    return '' if $self->{rewrite_inline_imports_seen}{$uri}++;
+    return '' if $self->{rewrite_inline_imports_seen}{$path}++;
 
-    return $self->{rewrite_inline_css_cb}->($uri);
+    my $content = $self->{rewrite_inline_css_cb}->($path);
+    return $self->_handle_imports($content, $path);
 }
 
 1;
