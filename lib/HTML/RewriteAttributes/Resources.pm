@@ -5,7 +5,7 @@ use warnings;
 use base 'HTML::RewriteAttributes';
 use URI;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my %rewritable_attrs = (
     bgsound => { src        => 1 },
