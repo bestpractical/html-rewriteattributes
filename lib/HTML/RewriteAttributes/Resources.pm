@@ -109,7 +109,8 @@ sub _import {
 
     return '' if $self->{rewrite_inline_imports_seen}{$path}++;
 
-    my $content = $self->{rewrite_inline_css_cb}->($path);
+    my $content = "/* $path */\n"
+                . $self->{rewrite_inline_css_cb}->($path);
     return $self->_handle_imports($content, $path);
 }
 
