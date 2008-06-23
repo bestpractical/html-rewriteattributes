@@ -53,6 +53,8 @@ is($rewrote, << 'END', "rewrote the html correctly");
 
 <style type="text/css">
 <!--
+
+/* foo.css */
 foo; @import "quux.css";
 -->
 </style>
@@ -63,6 +65,8 @@ foo; @import "quux.css";
 
 <style type="text/css">
 <!--
+
+/* baz.css */
 baz; @import "foo.css";
 -->
 </style>

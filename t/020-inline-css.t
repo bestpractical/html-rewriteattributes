@@ -53,6 +53,8 @@ is($rewrote, << "END", "rewrote the html correctly");
         
 <style type="text/css">
 <!--
+
+/* foo.css */
 INLINED CSS
 -->
 </style>

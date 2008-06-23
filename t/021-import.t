@@ -55,7 +55,13 @@ is($rewrote, << 'END', "rewrote the html correctly");
 
 <style type="text/css">
 <!--
-foo; quux; bar;
+
+/* /foo.css */
+foo;
+/* /quux.css */
+quux;
+/* /bar.css */
+bar;
 -->
 </style>
 
@@ -65,6 +71,8 @@ foo; quux; bar;
 
 <style type="text/css">
 <!--
+
+/* /baz.css */
 baz;
 -->
 </style>
