@@ -6,7 +6,7 @@ use base 'HTML::RewriteAttributes';
 use HTML::Tagset ();
 use URI;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 my %rewritable_attrs;
 

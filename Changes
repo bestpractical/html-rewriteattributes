@@ -1,5 +1,8 @@
 Revision history for HTML-RewriteAttributes
 
+0.03    Wed Jul 02 21:03:39 2008
+        Resources: Include as comments the URLs of the inlined CSS files
+
 0.02    Wed May 07 18:52:06 2008
         Resources: Allow inlining of CSS
 
