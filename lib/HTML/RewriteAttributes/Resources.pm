@@ -81,11 +81,19 @@ sub _handle_imports {
 
     return $content if !$self->{rewrite_inline_imports};
 
+    # here we both try to preserve comments *and* ignore any @import
+    # statements that are in comments
     $content =~ s{
+        ( /\* .*? \*/ )
+        |
+        (//[^\n]*)
+        |
         \@import \s* " ([^"]+) " \s* ;
     }{
-        $self->_import($self->_absolutify($1, $base))
-    }xeg;
+          defined($1) ? $1
+        : defined($2) ? $2
+        : $self->_import($self->_absolutify($3, $base))
+    }xsmeg;
 
     return $content;
 }
