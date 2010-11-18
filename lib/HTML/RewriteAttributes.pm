@@ -176,15 +176,9 @@ L<HTML::ResolveLink>.
 
 Shawn M Moore, C<< <sartak@bestpractical.com> >>
 
-=head1 BUGS
-
-Please report any bugs or feature requests to
-C<bug-html-rewriteattributes at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=HTML-RewriteAttributes>.
-
 =head1 LICENSE
 
-Copyright 2008 Best Practical Solutions, LLC.
+Copyright 2008-2010 Best Practical Solutions, LLC.
 HTML::RewriteAttributes is distributed under the same terms as Perl itself.
 
 =cut
