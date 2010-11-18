@@ -1,0 +1,10 @@
+META.yml
+Makefile
+blib/
+inc/
+*.sw[po]
+pm_to_blib
+MANIFEST
+MANIFEST.bak
+SIGNATURE
+cover_db/
