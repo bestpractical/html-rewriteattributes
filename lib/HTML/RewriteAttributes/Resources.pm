@@ -49,7 +49,7 @@ sub _start_tag {
     my ($tag, $attr, $attrseq, $text) = @_;
 
     if ($self->{rewrite_inline_css_cb}) {
-        if ($tag eq 'link' && $attr->{type} eq 'text/css') {
+        if ($tag eq 'link' and defined $attr->{type} and $attr->{type} eq 'text/css' and defined $attr->{href}) {
             my $content = $self->_import($attr->{href});
             if (defined $content) {
                 $content = $self->_handle_imports($content, $attr->{href});
@@ -57,7 +57,7 @@ sub _start_tag {
                 return;
             }
         }
-        if ($tag eq 'style' && $attr->{type} eq 'text/css') {
+        if ($tag eq 'style' and defined $attr->{type} and $attr->{type} eq 'text/css') {
             $self->{rewrite_look_for_style} = 1;
         }
     }
