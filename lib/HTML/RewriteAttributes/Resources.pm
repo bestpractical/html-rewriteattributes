@@ -53,7 +53,9 @@ sub _start_tag {
             my $content = $self->_import($attr->{href});
             if (defined $content) {
                 $content = $self->_handle_imports($content, $attr->{href});
-                $self->{rewrite_html} .= "\n<style type=\"text/css\">\n<!--\n$content\n-->\n</style>\n";
+                $self->{rewrite_html} .= "\n<style type=\"text/css\"";
+                $self->{rewrite_html} .= " media=\"$attr->{media}\"" if $attr->{media};
+                $self->{rewrite_html} .= ">\n<!--\n$content\n-->\n</style>\n";
                 return;
             }
         }

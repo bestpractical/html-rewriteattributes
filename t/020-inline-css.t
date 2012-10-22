@@ -8,6 +8,7 @@ my $html = << 'END';
 <html>
     <head>
         <link type="text/css" href="foo.css" />
+        <link type="text/css" href="print.css" media="print" />
     </head>
     <body>
         <img src="moose.jpg" />
@@ -45,6 +46,7 @@ is_deeply(\@seen, [
 
 is_deeply(\@seen_inline, [
     "foo.css",
+    "print.css",
 ]);
 
 is($rewrote, << "END", "rewrote the html correctly");
@@ -55,6 +57,15 @@ is($rewrote, << "END", "rewrote the html correctly");
 <!--
 
 /* foo.css */
+INLINED CSS
+-->
+</style>
+
+        
+<style type="text/css" media="print">
+<!--
+
+/* print.css */
 INLINED CSS
 -->
 </style>
