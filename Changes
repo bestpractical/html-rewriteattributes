@@ -1,5 +1,9 @@
 Revision history for HTML-RewriteAttributes
 
+0.05    Mon Oct 22 2012
+        Resources: Preserve the media attribute when inlining CSS
+        Resources: Avoid uninitialized warnings by checking the attributes we expect
+
 0.04    Thu Nov 18 2010
         Resources: Ignore @import statements that appear in comments
 

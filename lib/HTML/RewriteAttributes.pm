@@ -6,7 +6,7 @@ use base 'HTML::Parser';
 use Carp 'croak';
 use HTML::Entities 'encode_entities';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub new {
     my $class = shift;
