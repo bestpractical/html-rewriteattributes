@@ -39,9 +39,10 @@ sub _should_rewrite {
 
 sub _invoke_callback {
     my $self = shift;
-    my ($tag, $attr, $value) = @_;
+    my ($tag, $attr, $value, $attrs, $attr_list) = @_;
 
-    return $self->{rewrite_callback}->($value, tag => $tag, attr => $attr, rewriter => $self);
+    return $self->{rewrite_callback}
+        ->( $value, tag => $tag, attr => $attr, rewriter => $self, attrs => $attrs, attr_list => $attr_list );
 }
 
 sub _start_tag {

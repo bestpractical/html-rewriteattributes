@@ -63,17 +63,20 @@ sub _start_tag {
 
     $self->{rewrite_html} .= "<$tag";
 
+    my @attr_list;
     for my $attr (@$attrseq) {
         next if $attr eq '/';
 
         if ($self->_should_rewrite($tag, $attr)) {
-            $attrs->{$attr} = $self->_invoke_callback($tag, $attr, $attrs->{$attr});
+            $attrs->{$attr} = $self->_invoke_callback($tag, $attr, $attrs->{$attr}, $attrs, \@attr_list);
             next if !defined($attrs->{$attr});
         }
 
-        $self->{rewrite_html} .= sprintf ' %s="%s"',
-                                    $attr,
-                                    encode_entities($attrs->{$attr});
+        push @attr_list, $attr;
+    }
+
+    for my $attr (@attr_list) {
+        $self->{rewrite_html} .= sprintf ' %s="%s"', $attr, encode_entities( $attrs->{$attr} );
     }
 
     $self->{rewrite_html} .= ' /' if $attrs->{'/'};
@@ -87,9 +90,7 @@ sub _default {
 
 sub _invoke_callback {
     my $self = shift;
-    my ($tag, $attr, $value) = @_;
-
-    return $self->{rewrite_callback}->($tag, $attr, $value);
+    return $self->{rewrite_callback}->(@_);
 }
 
 1;
@@ -109,6 +110,15 @@ HTML::RewriteAttributes - concise attribute rewriting
         return if $value =~ /COBOL/i;
 
         $value =~ s/\brocks\b/rules/g;
+        return $value;
+    });
+
+    # add loading="lazy" to img
+    $html = HTML::RewriteAttributes->rewrite($html, sub {
+        my ( $tag, $attr, $value, $attrs, $attr_list ) = @_;
+        return $value unless $tag eq 'img' && !$attrs->{loading};
+        $attrs->{loading} = 'lazy';
+        push @$attr_list, 'loading';
         return $value;
     });
 
