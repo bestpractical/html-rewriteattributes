@@ -103,10 +103,10 @@ THANKS
     HTML::ResolveLink.
 
 AUTHOR
-    Shawn M Moore, "<sartak@bestpractical.com>"
+    Best Practical Solutions, LLC <modules@bestpractical.com>
 
 LICENSE
-    Copyright 2008-2010 Best Practical Solutions, LLC.
+    Copyright 2008-2024 Best Practical Solutions, LLC.
     HTML::RewriteAttributes is distributed under the same terms as Perl
     itself.
 

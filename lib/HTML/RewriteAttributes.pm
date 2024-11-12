@@ -212,11 +212,11 @@ L<HTML::ResolveLink>.
 
 =head1 AUTHOR
 
-Shawn M Moore, C<< <sartak@bestpractical.com> >>
+Best Practical Solutions, LLC <modules@bestpractical.com>
 
 =head1 LICENSE
 
-Copyright 2008-2010 Best Practical Solutions, LLC.
+Copyright 2008-2024 Best Practical Solutions, LLC.
 HTML::RewriteAttributes is distributed under the same terms as Perl itself.
 
 =cut
