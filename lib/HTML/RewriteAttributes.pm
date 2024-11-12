@@ -1,4 +1,3 @@
-#!/usr/bin/env perl
 package HTML::RewriteAttributes;
 use strict;
 use warnings;
