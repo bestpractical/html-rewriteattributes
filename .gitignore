@@ -9,3 +9,4 @@ MANIFEST.bak
 SIGNATURE
 cover_db/
 *.bak
+/MYMETA.*
