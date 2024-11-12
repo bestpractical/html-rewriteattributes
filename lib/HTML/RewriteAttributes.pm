@@ -6,7 +6,7 @@ use base 'HTML::Parser';
 use Carp 'croak';
 use HTML::Entities 'encode_entities';
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub new {
     my $class = shift;
@@ -103,6 +103,12 @@ HTML::RewriteAttributes - concise attribute rewriting
 
 =head1 SYNOPSIS
 
+Locate a tag in a provided block of HTML and delete, add, or
+rewrite the attributes associated with that tag. The updated
+HTML is returned.
+
+Delete an attribute by returning undef.
+
     $html = HTML::RewriteAttributes->rewrite($html, sub {
         my ($tag, $attr, $value) = @_;
 
@@ -113,7 +119,10 @@ HTML::RewriteAttributes - concise attribute rewriting
         return $value;
     });
 
-    # add loading="lazy" to img
+Add an attribute by appending it to the C<$attr_list> arrayref
+and adding the value to the C<$attrs> hashref. For example,
+you could add C<loading="lazy"> to all C<img> tags.
+
     $html = HTML::RewriteAttributes->rewrite($html, sub {
         my ( $tag, $attr, $value, $attrs, $attr_list ) = @_;
         return $value unless $tag eq 'img' && !$attrs->{loading};
@@ -122,8 +131,10 @@ HTML::RewriteAttributes - concise attribute rewriting
         return $value;
     });
 
+Modify an existing attribute by returning the new value.
+The example below would be a C<src> attribute for an C<img>
+in an email.
 
-    # writing some HTML email I see..
     $html = HTML::RewriteAttributes::Resources->rewrite($html, sub {
         my $uri = shift;
         my $content = render_template($uri);
@@ -132,11 +143,16 @@ HTML::RewriteAttributes - concise attribute rewriting
         return "cid:$cid";
     });
 
+Passing a URL, L<HTML::RewriteAttributes::Links> can update resources
+like C<href>s or C<img>s to include the base URL, changing
+C<E<lt>img src="/bar.gif"E<gt>> to C<E<lt>img src="https://search.cpan.org/bar.gif"E<gt>>.
+See also L<HTML::ResolveLink>.
 
-    # up for some HTML::ResolveLink?
-    $html = HTML::RewriteAttributes::Links->rewrite($html, "http://search.cpan.org");
+    $html = HTML::RewriteAttributes::Links->rewrite($html, "https://search.cpan.org");
 
-    # or perhaps HTML::LinkExtor?
+    # Passing a subroutine reference, L<HTML::RewriteAttributes::Links> can
+    # extract all links, similar to L<HTML::LinkExtor>.
+
     HTML::RewriteAttributes::Links->rewrite($html, sub {
         my ($tag, $attr, $value) = @_;
         push @links, $value;
@@ -154,6 +170,9 @@ for you.
 This module is designed to be subclassable to make handling special cases
 eaiser. See the source for methods you can override.
 
+See the SYNOPSIS above and included tests in the C<t> directory for more
+examples.
+
 =head1 METHODS
 
 =head2 C<new>
@@ -167,10 +186,20 @@ This is the main interface of the module. You pass in some HTML and a callback,
 the callback is invoked potentially many times, and you get back some similar
 HTML.
 
-The callback receives as arguments the tag name, the attribute name, and the
+As C<rewrite> parses the HTML block, it calls the provided callback,
+passing as arguments the current tag name, the attribute name, and the
 attribute value (though subclasses may override this --
-L<HTML::RewriteAttributes::Resources> does). Return C<undef> to remove the
-attribute, or any other value to set the value of the attribute.
+L<HTML::RewriteAttributes::Resources> does). The callback can then use the
+arguments to determine if you want to change the current tag or attribute,
+or skip it by returning the current value unchanged. If you find the tag
+and attribute you want to change, return C<undef> to remove the attribute,
+or any other value to set the value of the attribute.
+
+The callback also is passed a hashref C<$attrs> which has keys for attributes
+and values with the current values. Finally C<$attr_list> is passed as an
+arrayref contain all attributes for the current tag. To add a new attribute,
+add the attribute name to the C<$attr_list> arrayref, and add the new value
+to C<$attrs>.
 
 =head1 SEE ALSO
 
