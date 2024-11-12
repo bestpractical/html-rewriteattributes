@@ -167,7 +167,7 @@ You simply specify a callback to run for each attribute and we do the rest
 for you.
 
 This module is designed to be subclassable to make handling special cases
-eaiser. See the source for methods you can override.
+easier. See the source for methods you can override.
 
 See the SYNOPSIS above and included tests in the C<t> directory for more
 examples.
